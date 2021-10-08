@@ -40,23 +40,38 @@ public class Check {
 	}
 
 	//loging the mute to a channel named "logs", creating one if one doesn't exist
-	public static void logMute(GuildMessageReceivedEvent event, User userMuted) {
+	public static void logMute(GuildMessageReceivedEvent event, User userMuted, String blockedWord, String link) {
 		if (event.getGuild().getTextChannelsByName("logs", true).isEmpty()) {
 			event.getGuild().createTextChannel("logs").complete()
 					.upsertPermissionOverride(event.getGuild().getPublicRole()).deny(Permission.VIEW_CHANNEL).queue();
 		}
 
 		for (int i = 0; i < event.getGuild().getTextChannelsByName("logs", true).size(); i++) {
-			event.getGuild().getTextChannelsByName("logs", true).get(i).sendMessageEmbeds(userMuted(event)).queue();
+			event.getGuild().getTextChannelsByName("logs", true).get(i).sendMessageEmbeds(userMutedWithLink(event, blockedWord, link)).queue();
 		}
 	}
 
 	//when a user is muted, this is the embed sent
-	public static MessageEmbed userMuted(GuildMessageReceivedEvent event) {
+	public static MessageEmbed userMutedWithLink(GuildMessageReceivedEvent event, String blockedWord, String link) {
 
 		return new EmbedBuilder().setColor(Color.GRAY).setTitle("User muted: ")
-				.setDescription("User: " + event.getAuthor().getAsMention() + "\nReason: **Using profanity**"
-						+ "\nDuration: **Permanent**")
+				.setDescription("User: " + event.getAuthor().getAsMention() 
+						+ "\nReason: **Using profanity**"
+						+ "\nDuration: **Permanent**"
+						+ "\nBlocked Word: ||" + blockedWord + "||"
+						+ "\nFull Message: " + link)
+				.setThumbnail(event.getAuthor().getAvatarUrl())
+				.setFooter("Powered By: @Pray#0001", event.getJDA().getSelfUser().getAvatarUrl()).setTimestamp(getTime(event)).build();
+
+	}
+	
+	public static MessageEmbed userMutedWithoutLink(GuildMessageReceivedEvent event, String blockedWord) {
+
+		return new EmbedBuilder().setColor(Color.GRAY).setTitle("User muted: ")
+				.setDescription("User: " + event.getAuthor().getAsMention() 
+						+ "\nReason: **Using profanity**"
+						+ "\nDuration: **Permanent**"
+						+ "\nBlocked Word: ||" + blockedWord + "||")
 				.setThumbnail(event.getAuthor().getAvatarUrl())
 				.setFooter("Powered By: @Pray#0001", event.getJDA().getSelfUser().getAvatarUrl()).setTimestamp(getTime(event)).build();
 
