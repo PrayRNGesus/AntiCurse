@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -25,9 +26,10 @@ public class Check {
 	// blocked word in words.txt
 	public static boolean checkForSwear(String content, GuildMessageReceivedEvent event) {
 		var query = Filters.eq("GuildId", event.getGuild().getIdLong());
-
+		List<String> bannedWords = Bot.sbw.find(query).first().getList("BannedWords", String.class);
+		
 		if (Bot.sbw.find(query).first().getString("FilterType").equalsIgnoreCase("custom")) {
-			if (Bot.sbw.find(query).first().getList("BannedWords", String.class).contains(content)) {
+			if (bannedWords.contains(content)) {
 				return true;
 			}
 		} else {

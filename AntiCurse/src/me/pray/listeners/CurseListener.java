@@ -29,9 +29,13 @@ public class CurseListener extends ListenerAdapter {
 			//checking for swear word
 			if (Check.checkForSwear(args[i], event)) {
 				
-				if(event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
+				if(event.getAuthor().equals(event.getJDA().getSelfUser())) {
 					return;
 				}
+				
+//				if(event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
+//					return;
+//				}
 				
 				//checking for muted role, creating if not created already
 				if (muted.isEmpty()) {

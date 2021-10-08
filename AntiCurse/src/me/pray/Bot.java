@@ -70,12 +70,14 @@ public class Bot {
 			throw new NullPointerException("JDA variable is null");
 		}
 		
-		ConnectionString connectionString = new ConnectionString("mongodb+srv://" + HiddenInfo.MONGOUSERNAME + ":" + HiddenInfo.MONGOPWD + "@cluster0.bulay.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-		MongoClientSettings settings = MongoClientSettings.builder()
-		        .applyConnectionString(connectionString)
-		        .build();
+//		ConnectionString connectionString = new ConnectionString("mongodb+srv://" + HiddenInfo.MONGOUSERNAME + ":" + HiddenInfo.MONGOPWD + "@cluster0.bulay.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+//		MongoClientSettings settings = MongoClientSettings.builder()
+//		        .applyConnectionString(connectionString)
+//		        .build();
 		
-		mongoClient = MongoClients.create(settings);
+//		mongoClient = MongoClients.create(settings);
+		
+		mongoClient = MongoClients.create();
 		db = mongoClient.getDatabase("AntiCurse");
 		sbw = db.getCollection("SpecificBannedWords");
 		
