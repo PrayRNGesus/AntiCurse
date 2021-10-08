@@ -13,12 +13,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class DenyUsage extends ListenerAdapter {
 
-	private Bot bot;
-
-	public DenyUsage(Bot bot) {
-		this.bot = bot;
-	}
-
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		var content = event.getMessage().getContentRaw();
@@ -27,7 +21,7 @@ public class DenyUsage extends ListenerAdapter {
 		String greenCheck = "<:GREEN_CHECK:895872055436791819>";
 		String warning = "<:Down:895893224403652619>";
 		var query = eq("GuildId", event.getGuild().getIdLong());
-		var first = bot.sbw.find(query).first();
+		var first = Bot.sbw.find(query).first();
 
 		//checking if the first argument is $deny
 		if (args[0].equalsIgnoreCase("$deny")) {
@@ -55,7 +49,7 @@ public class DenyUsage extends ListenerAdapter {
 
 			//updating mongodb
 			var update = Updates.push("BannedWords", args[1]);
-			bot.sbw.updateOne(query, update);
+			Bot.sbw.updateOne(query, update);
 			
 			//success message
 			event.getChannel().sendMessage(greenCheck + "Success! Banned the word " + args[1]).queue();

@@ -34,7 +34,7 @@ public class Bot {
 	public MongoClient mongoClient;
 	public MongoDatabase db;
 	//short for specificBannedWords
-	public MongoCollection<Document> sbw;
+	public static MongoCollection<Document> sbw;
 	
 	//constructor for bot
 	public Bot() {
@@ -46,7 +46,7 @@ public class Bot {
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_VOICE_STATES);
 		builder.setStatus(OnlineStatus.ONLINE);
 		builder.setActivity(Activity.watching("people swearing"));
-		builder.addEventListeners(new CurseListener(), new HelpCmd(), new DenyUsage(this), new AllowUsage(this), new SetFilterType(this), new JoinListener(this));
+		builder.addEventListeners(new CurseListener(), new HelpCmd(), new DenyUsage(), new AllowUsage(), new SetFilterType(), new JoinListener());
 
 		//surrounded with try catch so we don't need to add any throws to our psvm in our Main class
 		try {

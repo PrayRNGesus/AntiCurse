@@ -27,7 +27,7 @@ public class CurseListener extends ListenerAdapter {
 		for (int i = 0; i < args.length; i++) {
 			
 			//checking for swear word
-			if (Check.checkForSwear(args[i])) {
+			if (Check.checkForSwear(args[i], event)) {
 				
 				if(event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
 					return;

@@ -10,13 +10,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class SetFilterType extends ListenerAdapter {
-
-	private Bot bot;
-
-	public SetFilterType(Bot bot) {
-		this.bot = bot;
-	}
-
+	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		var content = event.getMessage().getContentRaw();
@@ -41,7 +35,7 @@ public class SetFilterType extends ListenerAdapter {
 
 			if (args[1].equalsIgnoreCase("custom")) {
 				var update = Updates.set("FilterType", "Custom");
-				bot.sbw.updateOne(query, update);
+				Bot.sbw.updateOne(query, update);
 				event.getChannel().sendMessage(greenCheck
 						+ "Set filter type to custom. To allow or deny words, use `$allow [word]` or `$deny [word]`")
 						.queue();
@@ -50,7 +44,7 @@ public class SetFilterType extends ListenerAdapter {
 
 			if (args[1].equalsIgnoreCase("high")) {
 				var update = Updates.set("FilterType", "High");
-				bot.sbw.updateOne(query, update);
+				Bot.sbw.updateOne(query, update);
 				event.getChannel().sendMessage(greenCheck + "Set filter type to high.").queue();
 				return;
 			}

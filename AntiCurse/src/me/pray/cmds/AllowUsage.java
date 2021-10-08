@@ -15,12 +15,6 @@ public class AllowUsage extends ListenerAdapter {
 
 	//TODO: add embeds
 	
-	private Bot bot;
-	 
-	public AllowUsage(Bot bot) {
-		this.bot = bot;
-	}
-	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		var content = event.getMessage().getContentRaw();
@@ -29,7 +23,7 @@ public class AllowUsage extends ListenerAdapter {
 		String greenCheck = "<:GREEN_CHECK:895872055436791819>";
 		String warning = "<:Down:895893224403652619>";
 		var query = eq("GuildId", event.getGuild().getIdLong());
-		var first = bot.sbw.find(query).first();
+		var first = Bot.sbw.find(query).first();
 		
 		//checking if the first argument is $allow
 		if (args[0].equalsIgnoreCase("$allow")) {
@@ -56,7 +50,7 @@ public class AllowUsage extends ListenerAdapter {
 
 			//updating mongodb
 			var update = Updates.pull("BannedWords", args[1]);
-			bot.sbw.updateOne(query, update);
+			Bot.sbw.updateOne(query, update);
 			
 			//success message
 			event.getChannel().sendMessage(greenCheck + "Success! Allowed the word " + args[1]).queue();

@@ -8,6 +8,9 @@ import java.time.OffsetDateTime;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 
+import com.mongodb.client.model.Filters;
+
+import me.pray.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -18,28 +21,38 @@ public class Check {
 
 	static File file = new File("words.txt");
 
-	//looping through the provided content to see if the content is the same as a blocked word in words.txt
-	public static boolean checkForSwear(String content) {
-		LineIterator it = null;
-		try {
-			it = FileUtils.lineIterator(file, "UTF-8");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			while (it.hasNext()) {
-				String line = it.nextLine();
-				if (content.equalsIgnoreCase(line)) {
-					return true;
-				}
+	// looping through the provided content to see if the content is the same as a
+	// blocked word in words.txt
+	public static boolean checkForSwear(String content, GuildMessageReceivedEvent event) {
+		var query = Filters.eq("GuildId", event.getGuild().getIdLong());
+
+		if (Bot.sbw.find(query).first().getString("FilterType").equalsIgnoreCase("custom")) {
+			if (Bot.sbw.find(query).first().getList("BannedWords", String.class).contains(content)) {
+				return true;
 			}
-		} finally {
-			it.close();
+		} else {
+			LineIterator it = null;
+			try {
+				it = FileUtils.lineIterator(file, "UTF-8");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				while (it.hasNext()) {
+					String line = it.nextLine();
+					if (content.equalsIgnoreCase(line)) {
+						return true;
+					}
+				}
+			} finally {
+				it.close();
+			}
 		}
+
 		return false;
 	}
 
-	//loging the mute to a channel named "logs", creating one if one doesn't exist
+	// loging the mute to a channel named "logs", creating one if one doesn't exist
 	public static void logMute(GuildMessageReceivedEvent event, User userMuted, String blockedWord, String link) {
 		if (event.getGuild().getTextChannelsByName("logs", true).isEmpty()) {
 			event.getGuild().createTextChannel("logs").complete()
@@ -47,37 +60,36 @@ public class Check {
 		}
 
 		for (int i = 0; i < event.getGuild().getTextChannelsByName("logs", true).size(); i++) {
-			event.getGuild().getTextChannelsByName("logs", true).get(i).sendMessageEmbeds(userMutedWithLink(event, blockedWord, link)).queue();
+			event.getGuild().getTextChannelsByName("logs", true).get(i)
+					.sendMessageEmbeds(userMutedWithLink(event, blockedWord, link)).queue();
 		}
 	}
 
-	//when a user is muted, this is the embed sent
+	// when a user is muted, this is the embed sent
 	public static MessageEmbed userMutedWithLink(GuildMessageReceivedEvent event, String blockedWord, String link) {
 
 		return new EmbedBuilder().setColor(Color.GRAY).setTitle("User muted: ")
-				.setDescription("User: " + event.getAuthor().getAsMention() 
-						+ "\nReason: **Using profanity**"
-						+ "\nDuration: **Permanent**"
-						+ "\nBlocked Word: ||" + blockedWord + "||"
-						+ "\nFull Message: " + link)
+				.setDescription("User: " + event.getAuthor().getAsMention() + "\nReason: **Using profanity**"
+						+ "\nDuration: **Permanent**" + "\nBlocked Word: ||" + blockedWord + "||" + "\nFull Message: "
+						+ link)
 				.setThumbnail(event.getAuthor().getAvatarUrl())
-				.setFooter("Powered By: @Pray#0001", event.getJDA().getSelfUser().getAvatarUrl()).setTimestamp(getTime(event)).build();
+				.setFooter("Powered By: @Pray#0001", event.getJDA().getSelfUser().getAvatarUrl())
+				.setTimestamp(getTime(event)).build();
 
 	}
-	
+
 	public static MessageEmbed userMutedWithoutLink(GuildMessageReceivedEvent event, String blockedWord) {
 
 		return new EmbedBuilder().setColor(Color.GRAY).setTitle("User muted: ")
-				.setDescription("User: " + event.getAuthor().getAsMention() 
-						+ "\nReason: **Using profanity**"
-						+ "\nDuration: **Permanent**"
-						+ "\nBlocked Word: ||" + blockedWord + "||")
+				.setDescription("User: " + event.getAuthor().getAsMention() + "\nReason: **Using profanity**"
+						+ "\nDuration: **Permanent**" + "\nBlocked Word: ||" + blockedWord + "||")
 				.setThumbnail(event.getAuthor().getAvatarUrl())
-				.setFooter("Powered By: @Pray#0001", event.getJDA().getSelfUser().getAvatarUrl()).setTimestamp(getTime(event)).build();
+				.setFooter("Powered By: @Pray#0001", event.getJDA().getSelfUser().getAvatarUrl())
+				.setTimestamp(getTime(event)).build();
 
 	}
 
-	//getting the time of the messages creation
+	// getting the time of the messages creation
 	public static OffsetDateTime getTime(GuildMessageReceivedEvent e) {
 		return e.getMessage().getTimeCreated();
 	}
