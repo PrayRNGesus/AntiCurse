@@ -20,6 +20,7 @@ import me.pray.cmds.DenyUsage;
 import me.pray.cmds.HelpCmd;
 import me.pray.cmds.SetFilterType;
 import me.pray.listeners.CurseListener;
+import me.pray.listeners.JoinListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -45,7 +46,7 @@ public class Bot {
 		builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_VOICE_STATES);
 		builder.setStatus(OnlineStatus.ONLINE);
 		builder.setActivity(Activity.watching("people swearing"));
-		builder.addEventListeners(new CurseListener(), new HelpCmd(), new DenyUsage(this), new AllowUsage(this), new SetFilterType(this));
+		builder.addEventListeners(new CurseListener(), new HelpCmd(), new DenyUsage(this), new AllowUsage(this), new SetFilterType(this), new JoinListener(this));
 
 		//surrounded with try catch so we don't need to add any throws to our psvm in our Main class
 		try {
