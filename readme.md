@@ -62,7 +62,7 @@ offensivephrase
 
 4. Configure MongoDB connection if you want to use custom blacklisted words. Ensure your MongoDB instance has a collection for guilds with fields GuildId, BannedWords, and FilterType (set to "custom" for custom filtering).
 
-*This feature was specifically added to practice usage of mongodb, and was useful if hosting the bot for multiple users; however, if cloning locally just set the words you want blacklisted in the words.txt and it will work as intended.*
+  * *This feature was specifically added to practice usage of mongodb, and was useful if hosting the bot for multiple users; however, if cloning locally just set the words you want blacklisted in the words.txt and it will work as intended.* *
 
 5. Run the bot with your Discord token by editing the Bot.java class to include your bot token in the JDA initialization:
 ```java
