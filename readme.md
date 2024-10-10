@@ -77,6 +77,14 @@ Once the bot is running in your Discord server:
 * The user is muted.
 * The mute action is logged in the logs channel (the bot will create this channel if it doesn't exist).
 3. The logs will show the muted user's information, the blacklisted word they used, and the full message content (if provided).
+
+# Customizing Filter Behavior
+* Custom Filtering Mode: If the MongoDB document for the guild has "FilterType": "custom", the bot will use the blacklisted words stored in the BannedWords field.
+* Default Filtering Mode: If the MongoDB document does not exist or does not specify "custom", the bot will use the words from the words.txt file.
+
+# Logging Mutes
+Whenever a user is muted, the bot sends an embedded message to a text channel named `logs`. If this channel doesn't exist, the bot creates it and configures it so that regular users cannot view it.
+
 # Example Logs
 The bot sends an embedded message to the `logs` channel:
 
@@ -88,13 +96,6 @@ User muted:
 - Blocked Word: ||badword||
 - Full Message: link-to-message (if available)
 ```
-
-# Customizing Filter Behavior
-* Custom Filtering Mode: If the MongoDB document for the guild has "FilterType": "custom", the bot will use the blacklisted words stored in the BannedWords field.
-* Default Filtering Mode: If the MongoDB document does not exist or does not specify "custom", the bot will use the words from the words.txt file.
-
-# Logging Mutes
-Whenever a user is muted, the bot sends an embedded message to a text channel named `logs`. If this channel doesn't exist, the bot creates it and configures it so that regular users cannot view it.
 
 # Contributing
 Feel free to open issues or submit pull requests with improvements or bug fixes. Contributions are always welcome!
