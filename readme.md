@@ -62,9 +62,39 @@ offensivephrase
 
 4. Configure MongoDB connection if you want to use custom blacklisted words. Ensure your MongoDB instance has a collection for guilds with fields GuildId, BannedWords, and FilterType (set to "custom" for custom filtering).
 
-  * *This feature was specifically added to practice usage of mongodb, and was useful if hosting the bot for multiple users; however, if cloning locally just set the words you want blacklisted in the words.txt and it will work as intended.* *
+  * *This feature was specifically added to practice usage of mongodb, and was useful if hosting the bot for multiple users; however, if cloning locally just set the words you want blacklisted in the words.txt, and it will work as intended. This restricts changing the filtering mode.* 
 
 5. Run the bot with your Discord token by editing the Bot.java class to include your bot token in the JDA initialization:
 ```java
 JDA jda = JDABuilder.createDefault("YOUR_DISCORD_BOT_TOKEN").build();
 ```
+
+# Usage
+Once the bot is running in your Discord server:
+
+1. Users' messages are automatically checked for blacklisted words.
+2. If a blacklisted word is found:
+* The user is muted.
+* The mute action is logged in the logs channel (the bot will create this channel if it doesn't exist).
+3. The logs will show the muted user's information, the blacklisted word they used, and the full message content (if provided).
+# Example Logs
+The bot sends an embedded message to the `logs` channel:
+
+```markdown
+User muted:
+- User: @username
+- Reason: **Using profanity**
+- Duration: **Permanent**
+- Blocked Word: ||badword||
+- Full Message: link-to-message (if available)
+```
+
+# Customizing Filter Behavior
+* Custom Filtering Mode: If the MongoDB document for the guild has "FilterType": "custom", the bot will use the blacklisted words stored in the BannedWords field.
+* Default Filtering Mode: If the MongoDB document does not exist or does not specify "custom", the bot will use the words from the words.txt file.
+
+# Logging Mutes
+Whenever a user is muted, the bot sends an embedded message to a text channel named `logs`. If this channel doesn't exist, the bot creates it and configures it so that regular users cannot view it.
+
+# Contributing
+Feel free to open issues or submit pull requests with improvements or bug fixes. Contributions are always welcome!
